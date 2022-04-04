@@ -48,7 +48,6 @@ def swell_ft(ftstr):
         return int(ftstr.replace("ft", "").split("-")[0])
 
 
-# write to influxdb
 def write_influx(out_arr, location):
     client = InfluxDBClient(host='localhost', port=8086)
     client.create_database('dive')
@@ -66,7 +65,7 @@ def write_influx(out_arr, location):
                            w_wind_s=record[
                                "w_wind_s"].replace(' ', '_'),
                            w_swell_s=record[
-                               "w_swell_s"],
+                               "w_swell_s"].replace(' ', ''),
                            w_wind_kt=record[
                                "w_wind_kt"],
                            w_swell_ft=record[
