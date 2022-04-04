@@ -29,3 +29,13 @@ time location period_name w_summary w_swell_ft w_swell_s w_wind_kt w_wind_s
 1649045268924000000 Cabrillo Thursday Sunny 2 2-3ft 10 NW_10
 
 select w_summary from dive where period_name =~/$period_name$/ and $timeFilter
+
+{{#if (eq value "Sunny")}}
+
+## <span style="color:green"> {{value}} </span>
+
+{{else}}
+
+## <span style="color:yellow"> {{value}} </span>
+
+{{/if}}
