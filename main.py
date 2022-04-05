@@ -5,7 +5,8 @@ from influxdb import InfluxDBClient
 import time
 import logging
 
-logging.basicConfig(filename='dive.log', level=logging.DEBUG)
+logging.basicConfig(filename='dive.log',
+                    format="%(asctime)s %(levelname)s %(threadName)s %(name)s %(message)s", level=logging.DEBUG)
 INFLUX_HOST = 'localhost'
 INFLUX_PORT = 8086
 
