@@ -29,7 +29,7 @@ def fetch_data(url):
     detail_week = soup.find(id='detailed-forecast-body')
     detail_items = detail_week.find_all('div', class_='forecast-text')
     forecase_details = [item.get_text().replace(
-        ' ', '\ ') for item in detail_items]
+        ' ', '\ ').replace(',', '.\ ') for item in detail_items]
     # logging.info(forecase_details)
 
     out_arr = []
