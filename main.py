@@ -14,11 +14,11 @@ INFLUX_PORT = 8086
 
 def fetch_data(url):
     r = requests.get(url)
-    soup = BeautifulSoup(r.content, "html.parser")
-    week = soup.find(id="seven-day-forecast-body")
+    soup = BeautifulSoup(r.content, 'html.parser')
+    week = soup.find(id='seven-day-forecast-body')
     # logging.info(week)
-
-    items = soup.find_all("li", class_="forecast-tombstone")
+    # get summary
+    items = week.find_all("li", class_="forecast-tombstone")
     period_name = [item.find(class_="txt-ctr-caps").get_text()
                    for item in items]
     w_summary = [item.find(class_="forecast-icon").get('title')
@@ -26,6 +26,14 @@ def fetch_data(url):
     w_detail = [item.get_text() for item in items]
 
     items = soup.find_all("li", class_="forecast-tombstone")
+
+    # get the details
+    detail_week = soup.find(id='detailed-forecast-body')
+    detail_items = detail_week.find_all('div', class_='forecast-text')
+    forecase_details = [item.get_text().replace(
+        ' ', '\ ') for item in detail_items]
+    # logging.info(forecase_details)
+
     out_arr = []
     for idx in range(len(period_name)):
         if w_detail[idx].find('kt') == -1:
@@ -37,6 +45,7 @@ def fetch_data(url):
                   "w_swell_s": t[1],
                   "w_wind_kt": int(re.findall(r'\d+', t[0])[0]),
                   "w_swell_ft": swell_ft(t[1]),
+                  "detail_s": forecase_details[idx],
                   }
         out_arr.append(dict(record))
     # logging.info(out_arr)
@@ -58,7 +67,7 @@ def write_influx(out_arr, location):
     data = []
     idx = 0
     for record in out_arr:
-        data.append("{measurement},location={location},period_name={period_name},w_summary={w_summary},w_wind_s={w_wind_s},w_swell_s={w_swell_s} w_wind_kt={w_wind_kt}i,w_swell_ft={w_swell_ft}i {timestamp}".
+        data.append("{measurement},location={location},period_name={period_name},w_summary={w_summary},w_wind_s={w_wind_s},w_swell_s={w_swell_s},detail_s={detail_s} w_wind_kt={w_wind_kt}i,w_swell_ft={w_swell_ft}i {timestamp}".
                     format(measurement=measurement_name,
                            location=location,
                            period_name=f"{idx}_{record['period_name']}",
@@ -72,6 +81,7 @@ def write_influx(out_arr, location):
                                "w_wind_kt"],
                            w_swell_ft=record[
                                "w_swell_ft"],
+                           detail_s=record["detail_s"],
                            timestamp=int(time.time() * 1000)))
         idx = idx + 1
 
