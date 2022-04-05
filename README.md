@@ -15,6 +15,9 @@ docker run -d \
 
 ### import dashboard into grafana
 
+- find dashboard export files under `dashboards` folder
+- login into grafana at port 3003, referring philhawthorne/docker-influxdb-grafana:latest
+
 ### install python dependencies
 
 ```
