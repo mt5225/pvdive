@@ -85,7 +85,7 @@ def write_influx(out_arr, location):
                            timestamp=int(time.time() * 1000)))
         idx = idx + 1
 
-    logging.info(data)
+    logging.debug(data)
 
     client_write_start_time = time.perf_counter()
     client.write_points(data, database='dive',
