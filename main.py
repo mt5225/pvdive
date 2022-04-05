@@ -1,4 +1,3 @@
-from unittest import skip
 import requests
 from bs4 import BeautifulSoup
 import re
@@ -6,8 +5,7 @@ from influxdb import InfluxDBClient
 import time
 import logging
 
-logging.basicConfig(filename='dive.log',
-                    encoding='utf-8', level=logging.DEBUG)
+logging.basicConfig(filename='dive.log', level=logging.DEBUG)
 INFLUX_HOST = 'localhost'
 INFLUX_PORT = 8086
 
