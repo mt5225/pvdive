@@ -68,7 +68,8 @@ def write_influx(out_arr, location):
         data.append("{measurement},location={location},period_name={period_name},w_summary={w_summary},w_wind_s={w_wind_s},w_swell_s={w_swell_s},detail_s={detail_s} w_wind_kt={w_wind_kt}i,w_swell_ft={w_swell_ft}i {timestamp}".
                     format(measurement=measurement_name,
                            location=location,
-                           period_name=f"{idx}_{record['period_name']}",
+                           period_name="{idx}_{period_name}".format(
+                               idx=idx, period_name=record["period_name"]),
                            w_summary=record[
                                "w_summary"].replace(' ', '_'),
                            w_wind_s=record[
