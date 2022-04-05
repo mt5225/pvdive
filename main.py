@@ -114,6 +114,6 @@ if __name__ == "__main__":
     ]
     for site in sites:
         data = fetch_data(site['url'])
-        write_influx(data, site['location'])
-        logging.debug("sleep for 5 seconds")
         time.sleep(5)
+        logging.info("sleep for 5 seconds")
+        write_influx(data, site['location'])
