@@ -8,6 +8,8 @@ import logging
 
 logging.basicConfig(filename='dive.log',
                     encoding='utf-8', level=logging.DEBUG)
+INFLUX_HOST = 'localhost'
+INFLUX_PORT = 8086
 
 
 def fetch_data(url):
@@ -49,7 +51,7 @@ def swell_ft(ftstr):
 
 
 def write_influx(out_arr, location):
-    client = InfluxDBClient(host='localhost', port=8086)
+    client = InfluxDBClient(host=INFLUX_HOST, port=INFLUX_PORT)
     client.create_database('dive')
     measurement_name = 'dive'
 
@@ -77,7 +79,7 @@ def write_influx(out_arr, location):
 
     client_write_start_time = time.perf_counter()
     client.write_points(data, database='dive',
-                        time_precision='ms', batch_size=len(out_arr), protocol='line')
+                        time_precision='ms', batch_size=10, protocol='line')
 
     client_write_end_time = time.perf_counter()
 
@@ -94,8 +96,13 @@ if __name__ == "__main__":
         {
             "location": "Malaga",
             "url": "https://marine.weather.gov/MapClick.php?lon=-118.39739&lat=33.80322#.YkuD7ZPYqBQ",
-        }
+        },
+        {
+            "location": "Redondo",
+            "url": "https://marine.weather.gov/MapClick.php?lon=-118.39165&lat=33.83646#.Yku_TpPMKBQ",
+        },
     ]
     for site in sites:
         data = fetch_data(site['url'])
         write_influx(data, site['location'])
+        time.sleep(1)
